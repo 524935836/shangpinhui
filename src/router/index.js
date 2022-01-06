@@ -5,6 +5,26 @@ import Login from '@/views/Login'
 import Register from '@/views/Register'
 import Search from '@/views/Search'
 
+const originPush = VueRouter.prototype.push
+const originReplace = VueRouter.prototype.replace
+
+// 二次封装push和replace
+VueRouter.prototype.push = function (location, resolve, reject) {
+  if (resolve && reject) {
+    originPush.call(this, location, resolve, reject)
+  } else {
+    originPush.call(this, location, () => { }, () => { })
+  }
+}
+
+VueRouter.prototype.replace = function (location, resolve, reject) {
+  if (resolve && reject) {
+    originReplace.call(this, location, resolve, reject)
+  } else {
+    originReplace.call(this, location, () => { }, () => { })
+  }
+}
+
 Vue.use(VueRouter)
 
 const routes = [
