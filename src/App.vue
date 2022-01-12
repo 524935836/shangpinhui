@@ -22,10 +22,13 @@ export default {
     this.getCategoryList()
     // 获取轮播图数据
     this.getBannerList()
+    // 获取floor数据
+    this.getFloorList()
   },
   methods: {
     ...mapActions('home', ['getCategoryList']),
-    ...mapActions('home', ['getBannerList'])
+    ...mapActions('home', ['getBannerList']),
+    ...mapActions('home', ['getFloorList'])
   }
 }
 </script>

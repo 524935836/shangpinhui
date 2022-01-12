@@ -11,7 +11,7 @@
     <!-- 猜你喜欢 -->
     <Like></Like>
     <!-- 楼层 -->
-    <Floor></Floor>
+    <Floor v-for="floor in floorList" :key="floor.id" :list="floor"></Floor>
     <!-- 商标 -->
     <Brand></Brand>
   </div>
@@ -24,6 +24,7 @@ import Rank from '@/views/Home/Rank'
 import Like from '@/views/Home/Like'
 import Floor from '@/views/Home/Floor'
 import Brand from '@/views/Home/Brand'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
@@ -37,6 +38,11 @@ export default {
     Like,
     Floor,
     Brand
+  },
+  computed: {
+    ...mapState('home', {
+      floorList: (state) => state.floorList
+    })
   }
 }
 </script>
