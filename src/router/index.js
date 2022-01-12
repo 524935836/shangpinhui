@@ -29,10 +29,10 @@ Vue.use(VueRouter)
 
 const routes = [
   { path: '/', redirect: '/home' },
-  { path: '/home', component: Home, meta: { show: true } },
-  { path: '/search', component: Search, meta: { show: true } },
-  { path: '/login', component: Login, meta: { show: false } },
-  { path: '/register', component: Register, meta: { show: false } }
+  { name: 'home', path: '/home', component: Home, meta: { show: true } },
+  { name: 'search', path: '/search/:keyword?', component: Search, meta: { show: true } },
+  { name: 'login', path: '/login', component: Login, meta: { show: false } },
+  { name: 'register', path: '/register', component: Register, meta: { show: false } }
 ]
 
 const router = new VueRouter({

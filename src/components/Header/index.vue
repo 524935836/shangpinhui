@@ -33,7 +33,12 @@
       </h1>
       <div class="searchArea">
         <form action="###" class="searchForm">
-          <input type="text" id="autocomplete" class="input-error input-xxlarge" />
+          <input
+            type="text"
+            id="autocomplete"
+            class="input-error input-xxlarge"
+            v-model="keyword"
+          />
           <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">
             搜索
           </button>
@@ -47,11 +52,20 @@
 export default {
   name: 'Header',
   data() {
-    return {}
+    return {
+      keyword: ''
+    }
   },
   methods: {
     goSearch() {
-      this.$router.push('/search')
+      const location = {
+        name: 'search',
+        params: { keyword: this.keyword || undefined }
+      }
+      if (this.$route.query) {
+        location.query = this.$route.query
+      }
+      this.$router.push(location)
     }
   }
 }

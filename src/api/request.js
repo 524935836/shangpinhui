@@ -14,7 +14,7 @@ requests.interceptors.request.use(function (config) {
 })
 requests.interceptors.response.use(function (response) {
   nprogress.done()
-  return response
+  return response.data
 }, function (error) {
   return Promise.reject(error)
 })
