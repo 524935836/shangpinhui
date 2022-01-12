@@ -20,9 +20,12 @@ export default {
   mounted() {
     // 获取商品三级分类列表数据
     this.getCategoryList()
+    // 获取轮播图数据
+    this.getBannerList()
   },
   methods: {
-    ...mapActions('home', ['getCategoryList'])
+    ...mapActions('home', ['getCategoryList']),
+    ...mapActions('home', ['getBannerList'])
   }
 }
 </script>
