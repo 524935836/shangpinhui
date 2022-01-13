@@ -4,7 +4,11 @@
       <div class="fl key brand">品牌</div>
       <div class="value logos">
         <ul class="logo-list">
-          <li v-for="trademark in trademarkList" :key="trademark.tmId">
+          <li
+            v-for="trademark in trademarkList"
+            :key="trademark.tmId"
+            @click="trademarkHandle(trademark)"
+          >
             {{ trademark.tmName }}
           </li>
         </ul>
@@ -14,11 +18,15 @@
         <a href="javascript:void(0);">更多</a>
       </div>
     </div>
-    <div class="type-wrap" v-for="attrs in attrsList" :key="attrs.attrId">
-      <div class="fl key">{{ attrs.attrName }}</div>
+    <div class="type-wrap" v-for="attr in attrsList" :key="attr.attrId">
+      <div class="fl key">{{ attr.attrName }}</div>
       <div class="fl value">
         <ul class="type-list">
-          <li v-for="(attrValue, index) in attrs.attrValueList" :key="index">
+          <li
+            v-for="(attrValue, index) in attr.attrValueList"
+            :key="index"
+            @click="attrHandle(attr, attrValue)"
+          >
             <a>{{ attrValue }}</a>
           </li>
         </ul>
@@ -38,6 +46,16 @@ export default {
   },
   computed: {
     ...mapGetters('search', ['attrsList', 'trademarkList'])
+  },
+  methods: {
+    // 发送trademark信息
+    trademarkHandle(trademark) {
+      this.$emit('trademarkInfo', trademark)
+    },
+    // 发送atts
+    attrHandle(attr, attrValue) {
+      this.$emit('attrInfo', attr, attrValue)
+    }
   }
 }
 </script>
@@ -72,6 +90,7 @@ export default {
       text-align: right;
       padding: 10px 10px 0 15px;
       float: left;
+      cursor: default;
     }
 
     .value {
@@ -97,6 +116,7 @@ export default {
           color: #e1251b;
           font-style: italic;
           font-size: 14px;
+          cursor: pointer;
 
           img {
             max-width: 100%;
@@ -115,6 +135,7 @@ export default {
           a {
             text-decoration: none;
             color: #666;
+            cursor: pointer;
           }
         }
       }

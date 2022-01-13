@@ -11,15 +11,23 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">
+              {{ searchParams.categoryName }}<i @click="removeCateName">×</i>
+            </li>
+            <li class="with-x" v-if="searchParams.keyword">
+              {{ searchParams.keyword }}<i @click="removeKeyword">×</i>
+            </li>
+            <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark.split(':')[1] }}<i @click="removeTrademark">×</i>
+            </li>
+            <li class="with-x" v-for="(attr, index) in searchParams.props" :key="index">
+              {{ attr.split(':')[1] }}<i @click="removeAttr(index)">×</i>
+            </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo" />
 
         <!--details-->
         <div class="details clearfix">
@@ -152,10 +160,11 @@ export default {
     this.getSearchInfo(this.searchParams)
   },
   watch: {
+    // 监视route变化，重新获取数据
     $route() {
-      this.searchParams.category1Id = ''
-      this.searchParams.category2Id = ''
-      this.searchParams.category3Id = ''
+      this.searchParams.category1Id = undefined
+      this.searchParams.category2Id = undefined
+      this.searchParams.category3Id = undefined
       Object.assign(this.searchParams, this.$route.params, this.$route.query)
       this.getSearchInfo(this.searchParams)
     }
@@ -164,7 +173,46 @@ export default {
     ...mapGetters('search', ['goodsList'])
   },
   methods: {
-    ...mapActions('search', ['getSearchInfo'])
+    ...mapActions('search', ['getSearchInfo']),
+    // 删除分类名字（query的）
+    removeCateName() {
+      this.searchParams.categoryName = undefined
+      this.searchParams.category1Id = undefined
+      this.searchParams.category2Id = undefined
+      this.searchParams.category3Id = undefined
+      this.getSearchInfo(this.searchParams)
+      this.$router.push({ name: 'search', params: this.$route.params })
+    },
+    // 删除关键字
+    removeKeyword() {
+      this.searchParams.keyword = undefined
+      this.getSearchInfo(this.searchParams)
+      this.$bus.$emit('clear')
+      this.$router.push({ name: 'search', query: this.$route.query })
+    },
+    // 获取trademark的回调(自定义事件)
+    trademarkInfo(trademark) {
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`
+      this.getSearchInfo(this.searchParams)
+    },
+    // 删除trademark
+    removeTrademark() {
+      this.searchParams.trademark = undefined
+      this.getSearchInfo(this.searchParams)
+    },
+    // 获取attr的回调
+    attrInfo(attr, attrValue) {
+      const prop = `${attr.attrId}:${attrValue}:${attr.attrName}`
+      if (this.searchParams.props.indexOf(prop) === -1) {
+        this.searchParams.props.push(prop)
+        this.getSearchInfo(this.searchParams)
+      }
+    },
+    // 删除attr
+    removeAttr(index) {
+      this.searchParams.props.splice(index, 1)
+      this.getSearchInfo(this.searchParams)
+    }
   }
 }
 </script>

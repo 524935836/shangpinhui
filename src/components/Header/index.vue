@@ -56,6 +56,15 @@ export default {
       keyword: ''
     }
   },
+  mounted() {
+    // 清除文本框
+    this.$bus.$on('clear', () => {
+      this.keyword = ''
+    })
+  },
+  beforeDestroy() {
+    this.$bus.$off('clear')
+  },
   methods: {
     goSearch() {
       const location = {
