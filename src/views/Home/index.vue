@@ -24,7 +24,7 @@ import Rank from '@/views/Home/Rank'
 import Like from '@/views/Home/Like'
 import Floor from '@/views/Home/Floor'
 import Brand from '@/views/Home/Brand'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Home',
@@ -41,8 +41,20 @@ export default {
   },
   computed: {
     ...mapState('home', {
-      floorList: (state) => state.floorList
+      floorList: (state) => state.floorList,
+      bannerList: (state) => state.bannerList
     })
+  },
+  mounted() {
+    if (!this.floorList.length && !this.bannerList.length) {
+      // 获取轮播图数据
+      this.getBannerList()
+      // 获取floor数据
+      this.getFloorList()
+    }
+  },
+  methods: {
+    ...mapActions('home', ['getBannerList', 'getFloorList'])
   }
 }
 </script>

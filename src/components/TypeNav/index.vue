@@ -111,7 +111,7 @@ export default {
         } else if (category2id) {
           query.category2Id = category2id
         } else if (category3id) {
-          query.category2Id = category3id
+          query.category3Id = category3id
         }
         if (this.$route.params) {
           location.params = this.$route.params
@@ -164,6 +164,10 @@ export default {
       // position: absolute;
       background: #fafafa;
       z-index: 999;
+
+      a {
+        cursor: pointer;
+      }
 
       .all-sort-list2 {
         .item {
