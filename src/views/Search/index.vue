@@ -34,23 +34,23 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: isOne }">
+                  <a @click="changeOrder('1')"
+                    >综合<span
+                      class="iconfont"
+                      v-if="isOne"
+                      :class="[isarrow ? 'icon-UP' : 'icon-DOWN']"
+                    ></span
+                  ></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: isTwo }">
+                  <a @click="changeOrder('2')"
+                    >价格<span
+                      class="iconfont"
+                      v-if="isTwo"
+                      :class="[isarrow ? 'icon-UP' : 'icon-DOWN']"
+                    ></span
+                  ></a>
                 </li>
               </ul>
             </div>
@@ -141,7 +141,7 @@ export default {
         category3Id: '',
         categoryName: '',
         keyword: '',
-        order: '',
+        order: '1:desc',
         pageNo: 1,
         pageSize: 10,
         props: [],
@@ -170,7 +170,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('search', ['goodsList'])
+    ...mapGetters('search', ['goodsList']),
+    isOne() {
+      return this.searchParams.order.indexOf('1') !== -1
+    },
+    isTwo() {
+      return this.searchParams.order.indexOf('2') !== -1
+    },
+    isarrow() {
+      return this.searchParams.order.indexOf('asc') !== -1
+    }
   },
   methods: {
     ...mapActions('search', ['getSearchInfo']),
@@ -211,6 +220,22 @@ export default {
     // 删除attr
     removeAttr(index) {
       this.searchParams.props.splice(index, 1)
+      this.getSearchInfo(this.searchParams)
+    },
+    // 点击改变order的回调
+    changeOrder(flag) {
+      const originOrder = this.searchParams.order
+      const originFlag = originOrder.split(':')[0]
+      const originSort = originOrder.split(':')[1]
+      let newOrder = ''
+      // 点击同一个选项
+      if (flag === originFlag) {
+        newOrder = `${flag}:${originSort === 'desc' ? 'asc' : 'desc'}`
+      } else {
+        // 点击不同选项
+        newOrder = `${flag}:${'desc'}`
+      }
+      this.searchParams.order = newOrder
       this.getSearchInfo(this.searchParams)
     }
   }
@@ -324,6 +349,12 @@ export default {
                 padding: 11px 15px;
                 color: #777;
                 text-decoration: none;
+
+                span {
+                  font-size: 25px;
+                  margin-left: 2px;
+                  vertical-align: text-bottom;
+                }
               }
 
               &.active {
