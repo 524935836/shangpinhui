@@ -56,11 +56,11 @@
             </div>
           </div>
           <div class="goods-list">
-            <ul class="yui3-g">
+            <ul class="yui3-g" @click="goDetail">
               <li class="yui3-u-1-5" v-for="goods in goodsList" :key="goods.id">
                 <div class="list-wrap">
-                  <div class="p-img">
-                    <a href="item.html" target="_blank"><img :src="goods.defaultImg" /></a>
+                  <div class="p-img" :data-goods-id="goods.id">
+                    <a target="_blank"><img :src="goods.defaultImg" /></a>
                   </div>
                   <div class="price">
                     <strong>
@@ -71,7 +71,6 @@
                   <div class="attr">
                     <a
                       target="_blank"
-                      href="item.html"
                       title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】"
                       >{{ goods.title }}</a
                     >
@@ -80,13 +79,8 @@
                     <i class="command">已有<span>2000</span>人评价</i>
                   </div>
                   <div class="operate">
-                    <a
-                      href="success-cart.html"
-                      target="_blank"
-                      class="sui-btn btn-bordered btn-danger"
-                      >加入购物车</a
-                    >
-                    <a href="javascript:void(0);" class="sui-btn btn-bordered">收藏</a>
+                    <a target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
+                    <a class="sui-btn btn-bordered">收藏</a>
                   </div>
                 </div>
               </li>
@@ -250,6 +244,14 @@ export default {
       if (pageNo === this.searchParams.pageNo) return
       this.searchParams.pageNo = pageNo
       this.getSearchInfo(this.searchParams)
+    },
+    // 跳转详情页
+    goDetail(event) {
+      const element = event.target
+      const { goodsId } = element.dataset
+      if (goodsId) {
+        this.$router.push({ name: 'detail', params: { id: goodsId } })
+      }
     }
   }
 }
@@ -399,6 +401,7 @@ export default {
                 padding-left: 15px;
                 width: 215px;
                 height: 255px;
+                cursor: pointer;
 
                 a {
                   color: #666;
