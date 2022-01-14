@@ -34,7 +34,7 @@ const routes = [
   { name: 'search', path: '/search/:keyword?', component: Search, meta: { show: true } },
   { name: 'login', path: '/login', component: Login, meta: { show: false } },
   { name: 'register', path: '/register', component: Register, meta: { show: false } },
-  { name: 'detail', path: '/detail/:id', component: Detail, meta: { show: true } }
+  { name: 'detail', path: '/detail/:skuId ', component: Detail, meta: { show: true } }
 ]
 
 const router = new VueRouter({

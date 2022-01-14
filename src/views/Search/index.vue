@@ -59,8 +59,10 @@
             <ul class="yui3-g" @click="goDetail">
               <li class="yui3-u-1-5" v-for="goods in goodsList" :key="goods.id">
                 <div class="list-wrap">
-                  <div class="p-img" :data-goods-id="goods.id">
-                    <a target="_blank"><img :src="goods.defaultImg" /></a>
+                  <div class="p-img">
+                    <a target="_blank"
+                      ><img :src="goods.defaultImg" :data-goods-id="goods.id"
+                    /></a>
                   </div>
                   <div class="price">
                     <strong>
@@ -250,7 +252,7 @@ export default {
       const element = event.target
       const { goodsId } = element.dataset
       if (goodsId) {
-        this.$router.push({ name: 'detail', params: { id: goodsId } })
+        this.$router.push({ name: 'detail', params: { skuId: goodsId } })
       }
     }
   }
