@@ -387,7 +387,8 @@ export default {
         skuNum: this.skuNum
       })
       if (res.code !== 200) return alert(res.message)
-      this.$router.push({ name: 'addCartSuccess' })
+      this.$router.push({ name: 'addCartSuccess', query: { skuNum: this.skuNum } })
+      sessionStorage.setItem('skuInfo', JSON.stringify(this.skuInfo))
     }
   }
 }
