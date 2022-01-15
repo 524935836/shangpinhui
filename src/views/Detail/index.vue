@@ -326,7 +326,7 @@
 <script>
 import ImageList from './ImageList'
 import Zoom from './Zoom'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'Detail',
@@ -338,11 +338,14 @@ export default {
     Zoom
   },
   mounted() {
-    // 获取详情信息
-    this.getGoodsInfo(this.$route.params.skuId)
+    if (!Object.keys(this.goodsInfo).length) {
+      // 获取详情信息
+      this.getGoodsInfo(this.$route.params.skuId)
+    }
   },
   computed: {
     ...mapGetters('detail', ['categoryView', 'skuInfo', 'spuSaleAttrList']),
+    ...mapState('detail', ['goodsInfo']),
     skuImageList() {
       return this.skuInfo.skuImageList || []
     }

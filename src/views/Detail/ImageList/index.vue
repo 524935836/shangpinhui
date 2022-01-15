@@ -1,8 +1,12 @@
 <template>
-  <div class="swiper-container">
+  <div class="swiper-container" ref="carousel">
     <div class="swiper-wrapper">
-      <div class="swiper-slide" v-for="skuImage in skuImageList" :key="skuImage.id">
-        <img :src="skuImage.imgUrl" />
+      <div class="swiper-slide" v-for="(skuImage, index) in skuImageList" :key="skuImage.id">
+        <img
+          :src="skuImage.imgUrl"
+          @click="changeCurrentIndex(index)"
+          :class="{ active: currentIndex === index }"
+        />
       </div>
     </div>
     <div class="swiper-button-next"></div>
@@ -11,13 +15,43 @@
 </template>
 
 <script>
-// import Swiper from 'swiper'
+import Swiper from 'swiper'
+
 export default {
   name: 'ImageList',
   data() {
-    return {}
+    return {
+      mySwiper: null,
+      currentIndex: 0
+    }
   },
-  props: ['skuImageList']
+  props: ['skuImageList'],
+  watch: {
+    skuImageList: {
+      immediate: true,
+      handler() {
+        this.$nextTick(() => {
+          this.mySwiper = new Swiper(this.$refs.carousel, {
+            // 如果需要前进后退按钮
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev'
+            },
+            slidesPerView: 'auto',
+            slidesPerGroup: 1
+          })
+        })
+      }
+    }
+  },
+  methods: {
+    // 点击改变当前索引的回调
+    changeCurrentIndex(index) {
+      this.currentIndex = index
+      // 将当前索引传给zoom组件
+      this.$bus.$emit('getCurrentIndex', this.currentIndex)
+    }
+  }
 }
 </script>
 
@@ -46,10 +80,10 @@ export default {
         padding: 1px;
       }
 
-      &:hover {
-        border: 2px solid #f60;
-        padding: 1px;
-      }
+      // &:hover {
+      //   border: 2px solid #f60;
+      //   padding: 1px;
+      // }
     }
   }
 
