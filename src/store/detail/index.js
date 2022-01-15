@@ -1,4 +1,4 @@
-import { reqGoodsInfo } from '@/api'
+import { reqAddOrUpdateShopCart, reqGoodsInfo } from '@/api'
 
 const state = {
   goodsInfo: {}
@@ -15,6 +15,10 @@ const actions = {
     if (res.code === 200) {
       commit('GETGOODSINFO', res.data)
     }
+  },
+  // 添加到购物车
+  addOrUpdateShopCart({ commit }, { skuId, skuNum }) {
+    return reqAddOrUpdateShopCart(skuId, skuNum).catch(err => err)
   }
 }
 const getters = {

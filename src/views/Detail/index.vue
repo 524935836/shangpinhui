@@ -80,12 +80,22 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input
+                  autocomplete="off"
+                  class="itxt"
+                  v-model="skuNum"
+                  @change="changeSkuNum"
+                />
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a
+                  href="javascript:"
+                  class="mins"
+                  @click="skuNum < 2 ? (skuNum = 1) : skuNum--"
+                  >-</a
+                >
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a @click="addOrShopCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -331,7 +341,9 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 export default {
   name: 'Detail',
   data() {
-    return {}
+    return {
+      skuNum: 1
+    }
   },
   components: {
     ImageList,
@@ -351,12 +363,31 @@ export default {
     }
   },
   methods: {
-    ...mapActions('detail', ['getGoodsInfo']),
+    ...mapActions('detail', ['getGoodsInfo', 'addOrUpdateShopCart']),
+    // 改变样式（排它）
     changeActive(attr, attrList) {
       attrList.forEach((item) => {
         item.isChecked = '0'
       })
       attr.isChecked = '1'
+    },
+    // 改变商品数量
+    changeSkuNum(event) {
+      const value = event.target.value * 1
+      if (isNaN(value) || value < 0) {
+        this.skuNum = 1
+      } else {
+        this.skuNum = parseInt(value)
+      }
+    },
+    // 添加到购物车
+    async addOrShopCart() {
+      const res = await this.addOrUpdateShopCart({
+        skuId: this.$route.params.skuId,
+        skuNum: this.skuNum
+      })
+      if (res.code !== 200) return alert(res.message)
+      this.$router.push({ name: 'addCartSuccess' })
     }
   }
 }
@@ -570,6 +601,7 @@ export default {
 
             .add {
               float: left;
+              cursor: pointer;
 
               a {
                 background-color: #e1251b;

@@ -5,6 +5,7 @@ import Login from '@/views/Login'
 import Register from '@/views/Register'
 import Search from '@/views/Search'
 import Detail from '@/views/Detail'
+import AddCartSuccess from '@/views/AddCartSuccess'
 
 const originPush = VueRouter.prototype.push
 const originReplace = VueRouter.prototype.replace
@@ -34,7 +35,8 @@ const routes = [
   { name: 'search', path: '/search/:keyword?', component: Search, meta: { show: true } },
   { name: 'login', path: '/login', component: Login, meta: { show: false } },
   { name: 'register', path: '/register', component: Register, meta: { show: false } },
-  { name: 'detail', path: '/detail/:skuId ', component: Detail, meta: { show: true } }
+  { name: 'detail', path: '/detail/:skuId ', component: Detail, meta: { show: true } },
+  { name: 'addCartSuccess', path: '/addCartSuccess', component: AddCartSuccess, meta: { show: true } }
 ]
 
 const router = new VueRouter({
