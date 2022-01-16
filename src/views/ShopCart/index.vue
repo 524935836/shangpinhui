@@ -126,8 +126,20 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  name: 'ShopCart'
+  name: 'ShopCart',
+  data() {
+    return {}
+  },
+  mounted() {
+    // 获取购物车列表
+    this.getCartList()
+  },
+  methods: {
+    ...mapActions('cartList', ['getCartList'])
+  }
 }
 </script>
 

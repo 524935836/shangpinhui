@@ -34,6 +34,7 @@ export default {
       return JSON.parse(sessionStorage.getItem('skuInfo'))
     }
   },
+  mounted() {},
   methods: {}
 }
 </script>
