@@ -23,6 +23,29 @@ const actions = {
   // 切换商品选中状态
   updateCheckCart({ commit }, { skuId, isChecked }) {
     return reqCheckCart(skuId, isChecked).catch(err => err)
+  },
+  // 删除所有选中的商品
+  deleteAllCheckedCart({ dispatch, getters }) {
+    const promiseAll = []
+    getters.cartInfoList.forEach(item => {
+      if (item.isChecked === 1) {
+        const res = dispatch('deleteCart', item.skusId)
+        promiseAll.push(res)
+      }
+    })
+    return Promise.all(promiseAll)
+  },
+  // 改变全部商品的状态
+  updateAllCheckedCart({ dispatch, getters }, isChecked) {
+    const promiseAll = []
+    getters.cartInfoList.forEach(item => {
+      const res = dispatch('updateCheckCart', {
+        skuId: item.skuId,
+        isChecked
+      })
+      promiseAll.push(res)
+    })
+    return Promise.all(promiseAll)
   }
 }
 const getters = {

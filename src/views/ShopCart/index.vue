@@ -65,13 +65,18 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAll" />
+        <input
+          class="chooseAll"
+          type="checkbox"
+          :checked="isAll"
+          @change="updateAllCheckedCartList"
+        />
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
-        <a href="#none">移到我的关注</a>
-        <a href="#none">清除下柜商品</a>
+        <a @click="deleteAllCheckedCartList">删除选中的商品</a>
+        <a>移到我的关注</a>
+        <a>清除下柜商品</a>
       </div>
       <div class="money-box">
         <div class="chosed">已选择 <span>0</span>件商品</div>
@@ -106,7 +111,7 @@ export default {
   computed: {
     ...mapGetters('cartList', ['cartInfoList']),
     isAll() {
-      return this.cartInfoList.every((item) => item.isChecked)
+      return this.cartInfoList.every((item) => item.isChecked) && this.cartInfoList.length
     },
     totalPrice() {
       let sum = 0
@@ -119,7 +124,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions('cartList', ['getCartList', 'deleteCart', 'updateCheckCart']),
+    ...mapActions('cartList', [
+      'getCartList',
+      'deleteCart',
+      'updateCheckCart',
+      'deleteAllCheckedCart',
+      'updateAllCheckedCart'
+    ]),
     ...mapActions('detail', ['addOrUpdateShopCart']),
     // 改变商品数量
     async changeSkuNum(type, disNum, cartInfo) {
@@ -172,6 +183,49 @@ export default {
       const isChecked = event.target.checked ? '1' : '0'
       const res = await this.updateCheckCart({ skuId: cartInfo.skuId, isChecked })
       if (res.code !== 200) return alert(res.message)
+      this.getCartList()
+    },
+    // 删除所有选中的商品
+    async deleteAllCheckedCartList() {
+      let stop = false
+      const res = await this.deleteAllCheckedCart()
+      // 判断数组内是否报错
+      try {
+        res.forEach((item) => {
+          // console.log(222)
+          if (item.code !== 200) {
+            stop = true
+            // 跳出forEach
+            throw new Error(`${item.message}`)
+          }
+        })
+      } catch (err) {
+        alert(err.message)
+      }
+      // 报错跳出回调
+      if (stop) return
+      // console.log(11111)
+      this.getCartList()
+    },
+    // 改变全部商品的状态
+    async updateAllCheckedCartList(event) {
+      let stop = false
+      const isAllChecked = event.target.checked ? '1' : '0'
+      const res = await this.updateAllCheckedCart(isAllChecked)
+      // 判断数组内是否报错
+      try {
+        res.forEach((item) => {
+          if (item.code !== 200) {
+            stop = true
+            // 跳出forEach
+            throw new Error(`${item.message}`)
+          }
+        })
+      } catch (err) {
+        alert(err.message)
+      }
+      // 报错跳出回调
+      if (stop) return
       this.getCartList()
     }
   }
@@ -354,6 +408,11 @@ export default {
         float: left;
         padding: 0 10px;
         color: #666;
+        cursor: pointer;
+
+        &:hover {
+          color: red;
+        }
       }
     }
 
