@@ -8,32 +8,32 @@
       </h3>
       <div class="content">
         <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号" />
+        <input type="text" placeholder="请输入你的手机号" v-model="phone" />
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="content">
         <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码" />
-        <button style="width: 100px; height: 38px">获取验证码</button>
+        <input type="text" placeholder="请输入验证码" :value="code" />
+        <button style="width: 100px; height: 38px" @click="getCodeInfo">获取验证码</button>
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="content">
         <label>登录密码:</label>
-        <input type="text" placeholder="请输入你的登录密码" />
+        <input type="password" placeholder="请输入你的登录密码" v-model="password" />
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="content">
         <label>确认密码:</label>
-        <input type="text" placeholder="请输入确认密码" />
+        <input type="password" placeholder="请输入确认密码" v-model="password1" />
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="controls">
-        <input name="m1" type="checkbox" />
+        <input name="m1" type="checkbox" v-model="agree" />
         <span>同意协议并注册《尚品汇用户协议》</span>
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="btn">
-        <button>完成注册</button>
+        <button @click="handleRegisterUser">完成注册</button>
       </div>
     </div>
 
@@ -56,8 +56,39 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 export default {
-  name: 'Register'
+  name: 'Register',
+  data() {
+    return {
+      phone: '',
+      code: '',
+      password: '',
+      password1: '',
+      agree: true
+    }
+  },
+  computed: {
+    ...mapState('user', ['recCode'])
+  },
+  methods: {
+    ...mapActions('user', ['getCode', 'registerUser']),
+    // 获取注册验证码
+    async getCodeInfo() {
+      const { phone } = this
+      phone && (await this.getCode(phone))
+      this.code = this.recCode
+    },
+    // 注册用户
+    async handleRegisterUser() {
+      const { phone, code, password, password1, agree } = this
+      if (phone && code && password === password1 && agree) {
+        const res = await this.registerUser({ phone, password, code })
+        if (res.code !== 200) return alert(res.message)
+        this.$router.push('/login')
+      }
+    }
+  }
 }
 </script>
 

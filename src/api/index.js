@@ -10,3 +10,5 @@ export const reqAddOrUpdateShopCart = (skuId, skuNum) => requests.post(`cart/add
 export const reqCartList = () => requests.get('cart/cartList')
 export const reqDeleteCart = (params) => requests.delete(`cart/deleteCart/${params}`)
 export const reqCheckCart = (skuId, isChecked) => requests.get(`cart/checkCart/${skuId}/${isChecked}`)
+export const reqUserCode = (params) => requests.get(`user/passport/sendCode/${params}`)
+export const reqRegisterUser = (data) => requests.post('user/passport/register', data)
