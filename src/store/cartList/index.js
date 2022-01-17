@@ -1,4 +1,4 @@
-import { reqCartList } from '@/api'
+import { reqCartList, reqDeleteCart, reqCheckCart } from '@/api'
 
 const state = {
   cartList: []
@@ -15,6 +15,14 @@ const actions = {
     if (res.code === 200) {
       commit('GETCARTLIST', res.data)
     }
+  },
+  // 删除购物车商品
+  deleteCart({ commit }, skuId) {
+    return reqDeleteCart(skuId).catch(err => err)
+  },
+  // 切换商品选中状态
+  updateCheckCart({ commit }, { skuId, isChecked }) {
+    return reqCheckCart(skuId, isChecked).catch(err => err)
   }
 }
 const getters = {

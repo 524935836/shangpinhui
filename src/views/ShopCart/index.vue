@@ -13,7 +13,12 @@
       <div class="cart-body">
         <ul class="cart-list" v-for="cartInfo in cartInfoList" :key="cartInfo.id">
           <li class="cart-list-con1">
-            <input type="checkbox" name="chk_list" v-model="cartInfo.isChecked" />
+            <input
+              type="checkbox"
+              name="chk_list"
+              :checked="cartInfo.isChecked === 1"
+              @change="updateCheckCartList(cartInfo, $event)"
+            />
           </li>
           <li class="cart-list-con2">
             <img :src="cartInfo.imgUrl" />
@@ -51,9 +56,9 @@
             <span class="sum">{{ cartInfo.skuPrice * cartInfo.skuNum }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a @click="deleteCartList(cartInfo.skuId)" class="sindelet">删除</a>
             <br />
-            <a href="#none">移到收藏</a>
+            <a>移到收藏</a>
           </li>
         </ul>
       </div>
@@ -114,7 +119,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('cartList', ['getCartList']),
+    ...mapActions('cartList', ['getCartList', 'deleteCart', 'updateCheckCart']),
     ...mapActions('detail', ['addOrUpdateShopCart']),
     // 改变商品数量
     async changeSkuNum(type, disNum, cartInfo) {
@@ -155,7 +160,20 @@ export default {
       this.count = 0
       // 获取购物车列表之前禁止点击
       this.isDis = false
-    }, 1000)
+    }, 1000),
+    // 删除购物车商品
+    async deleteCartList(skuId) {
+      const res = await this.deleteCart(skuId)
+      if (res.code !== 200) return alert(res.message)
+      this.getCartList()
+    },
+    // 切换商品选中状态
+    async updateCheckCartList(cartInfo, event) {
+      const isChecked = event.target.checked ? '1' : '0'
+      const res = await this.updateCheckCart({ skuId: cartInfo.skuId, isChecked })
+      if (res.code !== 200) return alert(res.message)
+      this.getCartList()
+    }
   }
 }
 </script>
@@ -298,6 +316,11 @@ export default {
 
           a {
             color: #666;
+            cursor: pointer;
+
+            &:hover {
+              color: red;
+            }
           }
         }
       }
