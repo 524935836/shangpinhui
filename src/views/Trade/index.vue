@@ -53,7 +53,11 @@
       </div>
       <div class="bbs">
         <h5>买家留言：</h5>
-        <textarea placeholder="建议留言前先与商家沟通确认" class="remarks-cont"></textarea>
+        <textarea
+          placeholder="建议留言前先与商家沟通确认"
+          class="remarks-cont"
+          v-model="msg"
+        ></textarea>
       </div>
       <div class="line"></div>
       <div class="bill">
@@ -93,7 +97,8 @@
       </div>
     </div>
     <div class="sub clearFix">
-      <router-link class="subBtn" to="/pay">提交订单</router-link>
+      <!-- <router-link class="subBtn" to="/pay">提交订单</router-link> -->
+      <a class="subBtn" @click="submitOrder">提交订单</a>
     </div>
   </div>
 </template>
@@ -104,7 +109,9 @@ import { mapActions, mapState } from 'vuex'
 export default {
   name: 'Trade',
   data() {
-    return {}
+    return {
+      msg: ''
+    }
   },
   mounted() {
     // 获取用户地址信息
@@ -124,9 +131,23 @@ export default {
   },
   methods: {
     ...mapActions('trade', ['getAddressInfo', 'getOrderInfo']),
+    // 改变默认地址
     changeDefault(address, addressInfo) {
       addressInfo.forEach((item) => (item.isDefault = '0'))
       address.isDefault = '1'
+    },
+    // 提交订单
+    async submitOrder() {
+      const data = {
+        consignee: this.userDefaultAddress.consignee,
+        consigneeTel: this.userDefaultAddress.phoneNum,
+        deliveryAddress: this.userDefaultAddress.fullAddress,
+        paymentWay: 'ONLINE',
+        orderComment: this.msg,
+        orderDetailList: this.orderInfo.detailArrayList
+      }
+      const res = await this.$API.reqsubmitOrder(this.orderInfo.tradeNo, data)
+      if (res.code !== 200) return alert(res.message)
     }
   }
 }

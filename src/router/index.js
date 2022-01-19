@@ -8,6 +8,8 @@ import Detail from '@/views/Detail'
 import AddCartSuccess from '@/views/AddCartSuccess'
 import ShopCart from '@/views/ShopCart'
 import Trade from '@/views/Trade'
+import Pay from '@/views/Pay'
+
 import store from '@/store'
 
 const originPush = VueRouter.prototype.push
@@ -41,7 +43,8 @@ const routes = [
   { name: 'detail', path: '/detail/:skuId', component: Detail, meta: { show: true } },
   { name: 'addCartSuccess', path: '/addCartSuccess', component: AddCartSuccess, meta: { show: true } },
   { name: 'shopCart', path: '/shopCart', component: ShopCart, meta: { show: true } },
-  { name: 'trade', path: '/trade', component: Trade, meta: { show: true } }
+  { name: 'trade', path: '/trade', component: Trade, meta: { show: true } },
+  { name: 'pay', path: '/pay', component: Pay, meta: { show: true } }
 ]
 
 const router = new VueRouter({
