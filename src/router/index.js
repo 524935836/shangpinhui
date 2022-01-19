@@ -7,6 +7,7 @@ import Search from '@/views/Search'
 import Detail from '@/views/Detail'
 import AddCartSuccess from '@/views/AddCartSuccess'
 import ShopCart from '@/views/ShopCart'
+import Trade from '@/views/Trade'
 import store from '@/store'
 
 const originPush = VueRouter.prototype.push
@@ -39,7 +40,8 @@ const routes = [
   { name: 'register', path: '/register', component: Register, meta: { show: false } },
   { name: 'detail', path: '/detail/:skuId', component: Detail, meta: { show: true } },
   { name: 'addCartSuccess', path: '/addCartSuccess', component: AddCartSuccess, meta: { show: true } },
-  { name: 'shopCart', path: '/shopCart', component: ShopCart, meta: { show: true } }
+  { name: 'shopCart', path: '/shopCart', component: ShopCart, meta: { show: true } },
+  { name: 'trade', path: '/trade', component: Trade, meta: { show: true } }
 ]
 
 const router = new VueRouter({
