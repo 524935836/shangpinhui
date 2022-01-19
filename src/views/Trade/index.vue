@@ -3,28 +3,14 @@
     <h3 class="title">填写并核对订单信息</h3>
     <div class="content">
       <h5 class="receive">收件人信息</h5>
-      <div class="address clearFix">
-        <span class="username selected">张三</span>
-        <p>
-          <span class="s1">北京市昌平区宏福科技园综合楼6层</span>
-          <span class="s2">15010658793</span>
-          <span class="s3">默认地址</span>
-        </p>
-      </div>
-      <div class="address clearFix">
-        <span class="username selected">李四</span>
-        <p>
-          <span class="s1">北京市昌平区宏福科技园综合楼6层</span>
-          <span class="s2">13590909098</span>
-          <span class="s3">默认地址</span>
-        </p>
-      </div>
-      <div class="address clearFix">
-        <span class="username selected">王五</span>
-        <p>
-          <span class="s1">北京市昌平区宏福科技园综合楼6层</span>
-          <span class="s2">18012340987</span>
-          <span class="s3">默认地址</span>
+      <div class="address clearFix" v-for="address in addressInfo" :key="address.id">
+        <span class="username" :class="{ selected: address.isDefault === '1' }">{{
+          address.consignee
+        }}</span>
+        <p @click="changeDefault(address, addressInfo)">
+          <span class="s1">{{ address.fullAddress }}</span>
+          <span class="s2">{{ address.phoneNum }}</span>
+          <span class="s3" v-show="address.isDefault === '1'">默认地址</span>
         </p>
       </div>
       <div class="line"></div>
@@ -44,36 +30,24 @@
       </div>
       <div class="detail">
         <h5>商品清单</h5>
-        <ul class="list clearFix">
+        <ul
+          class="list clearFix"
+          v-for="order in orderInfo.detailArrayList"
+          :key="order.skuId"
+        >
           <li>
-            <img src="./images/goods.png" alt="" />
+            <img :src="order.imgUrl" alt="" />
           </li>
           <li>
             <p>
-              Apple iPhone 6s (A1700) 64G 玫瑰金色 移动联通电信4G手机硅胶透明防摔软壳 本色系列
+              {{ order.skuName }}
             </p>
             <h4>7天无理由退货</h4>
           </li>
           <li>
-            <h3>￥5399.00</h3>
+            <h3>￥{{ order.orderPrice }}.00</h3>
           </li>
-          <li>X1</li>
-          <li>有货</li>
-        </ul>
-        <ul class="list clearFix">
-          <li>
-            <img src="./images/goods.png" alt="" />
-          </li>
-          <li>
-            <p>
-              Apple iPhone 6s (A1700) 64G 玫瑰金色 移动联通电信4G手机硅胶透明防摔软壳 本色系列
-            </p>
-            <h4>7天无理由退货</h4>
-          </li>
-          <li>
-            <h3>￥5399.00</h3>
-          </li>
-          <li>X1</li>
+          <li>X{{ order.skuNum }}</li>
           <li>有货</li>
         </ul>
       </div>
@@ -91,8 +65,11 @@
     <div class="money clearFix">
       <ul>
         <li>
-          <b><i>1</i>件商品，总商品金额</b>
-          <span>¥5399.00</span>
+          <b
+            ><i>{{ orderInfo.totalNum }}</i
+            >件商品，总商品金额</b
+          >
+          <span>¥{{ orderInfo.totalAmount }}.00</span>
         </li>
         <li>
           <b>返现：</b>
@@ -105,12 +82,14 @@
       </ul>
     </div>
     <div class="trade">
-      <div class="price">应付金额: <span>¥5399.00</span></div>
+      <div class="price">
+        应付金额: <span>¥{{ orderInfo.totalAmount }}.00</span>
+      </div>
       <div class="receiveInfo">
         寄送至:
-        <span>北京市昌平区宏福科技园综合楼6层</span>
-        收货人：<span>张三</span>
-        <span>15010658793</span>
+        <span>{{ userDefaultAddress.fullAddress }}</span>
+        收货人：<span>{{ userDefaultAddress.consignee }}</span>
+        <span>{{ userDefaultAddress.phoneNum }}</span>
       </div>
     </div>
     <div class="sub clearFix">
@@ -120,8 +99,36 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 export default {
-  name: 'Trade'
+  name: 'Trade',
+  data() {
+    return {}
+  },
+  mounted() {
+    // 获取用户地址信息
+    this.getAddressInfo()
+    // 获取商品清单
+    this.getOrderInfo()
+  },
+  computed: {
+    ...mapState('trade', {
+      addressInfo: (state) => state.address,
+      orderInfo: (state) => state.orderInfo
+    }),
+    // 默认地址
+    userDefaultAddress() {
+      return this.addressInfo.find((item) => item.isDefault === '1') || {}
+    }
+  },
+  methods: {
+    ...mapActions('trade', ['getAddressInfo', 'getOrderInfo']),
+    changeDefault(address, addressInfo) {
+      addressInfo.forEach((item) => (item.isDefault = '0'))
+      address.isDefault = '1'
+    }
+  }
 }
 </script>
 
@@ -159,6 +166,7 @@ export default {
         text-align: center;
         border: 1px solid #ddd;
         position: relative;
+        cursor: default;
       }
 
       .username::after {
@@ -263,10 +271,27 @@ export default {
 
       .list {
         display: flex;
-        justify-content: space-between;
+        // justify-content: space-between;
 
         li {
           line-height: 30px;
+
+          &:nth-child(1) {
+            flex: 1;
+          }
+          &:nth-child(2) {
+            flex: 5;
+          }
+          &:nth-child(3) {
+            flex: 2;
+            text-align: center;
+          }
+          &:nth-child(4) {
+            flex: 1;
+          }
+          &:nth-child(5) {
+            flex: 1;
+          }
 
           p {
             margin-bottom: 20px;
@@ -279,6 +304,11 @@ export default {
 
           h3 {
             color: #e12228;
+          }
+
+          img {
+            width: 82px;
+            height: 82px;
           }
         }
       }
@@ -352,6 +382,10 @@ export default {
 
     .receiveInfo {
       color: #999;
+
+      span:nth-child(3) {
+        margin-left: 5px;
+      }
     }
   }
 

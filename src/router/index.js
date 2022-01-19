@@ -68,6 +68,7 @@ router.beforeEach(async (to, from, next) => {
         const res = await store.dispatch('user/getUserInfo')
         // token是否过期
         if (res.code !== 200) {
+          alert(res.message)
           await store.dispatch('user/logoutUser')
           next('/login')
           return

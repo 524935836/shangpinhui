@@ -15,3 +15,5 @@ export const reqRegisterUser = (data) => requests.post('user/passport/register',
 export const reqLoginUser = (data) => requests.post('user/passport/login', data)
 export const reqUserInfo = () => requests.get('user/passport/auth/getUserInfo')
 export const reqLogout = () => requests.get('user/passport/logout')
+export const reqAddressInfo = () => requests.get('user/userAddress/auth/findUserAddressList')
+export const reqOrderInfo = () => requests.get('order/auth/trade')
