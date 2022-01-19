@@ -31,6 +31,7 @@ export default {
       immediate: true,
       handler() {
         this.$nextTick(() => {
+          this.mySwiper && this.mySwiper.destroy()
           this.mySwiper = new Swiper(this.$refs.carousel, {
             // 如果需要前进后退按钮
             navigation: {
@@ -38,7 +39,10 @@ export default {
               prevEl: '.swiper-button-prev'
             },
             slidesPerView: 'auto',
-            slidesPerGroup: 1
+            slidesPerGroup: 1,
+            // 每次追加后，重新初始化swiper
+            observer: true,
+            observeParents: true
           })
         })
       }

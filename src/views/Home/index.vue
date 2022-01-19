@@ -46,15 +46,16 @@ export default {
     })
   },
   mounted() {
-    if (!this.floorList.length && !this.bannerList.length) {
-      // 获取轮播图数据
-      this.getBannerList()
-      // 获取floor数据
-      this.getFloorList()
-    }
+    // 获取轮播图数据
+    this.getBannerList()
+    // 获取floor数据
+    this.getFloorList()
+    // 获取用户信息
+    this.getUserInfo()
   },
   methods: {
-    ...mapActions('home', ['getBannerList', 'getFloorList'])
+    ...mapActions('home', ['getBannerList', 'getFloorList']),
+    ...mapActions('user', ['getUserInfo'])
   }
 }
 </script>

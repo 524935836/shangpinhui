@@ -18,6 +18,7 @@ const actions = {
   },
   // 删除购物车商品
   deleteCart({ commit }, skuId) {
+    // console.log(skuId)
     return reqDeleteCart(skuId).catch(err => err)
   },
   // 切换商品选中状态
@@ -29,7 +30,8 @@ const actions = {
     const promiseAll = []
     getters.cartInfoList.forEach(item => {
       if (item.isChecked === 1) {
-        const res = dispatch('deleteCart', item.skusId)
+        const id = item.skuId
+        const res = dispatch('deleteCart', id)
         promiseAll.push(res)
       }
     })

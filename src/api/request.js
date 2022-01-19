@@ -13,6 +13,9 @@ requests.interceptors.request.use(function (config) {
   if (store.state.detail.uuidToken) {
     config.headers.userTempId = store.state.detail.uuidToken
   }
+  if (store.state.user.token) {
+    config.headers.token = store.state.user.token
+  }
   return config
 }, function (error) {
   return Promise.reject(error)

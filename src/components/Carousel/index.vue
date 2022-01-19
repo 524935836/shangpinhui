@@ -31,6 +31,7 @@ export default {
       immediate: true,
       handler() {
         this.$nextTick(() => {
+          this.mySwiper && this.mySwiper.destroy()
           this.mySwiper = new Swiper(this.$refs.carousel, {
             loop: true, // 循环模式选项
 
@@ -44,7 +45,10 @@ export default {
             navigation: {
               nextEl: '.swiper-button-next',
               prevEl: '.swiper-button-prev'
-            }
+            },
+            // 每次追加后，重新初始化swiper
+            observer: true,
+            observeParents: true
           })
         })
       }

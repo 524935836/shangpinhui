@@ -12,3 +12,6 @@ export const reqDeleteCart = (params) => requests.delete(`cart/deleteCart/${para
 export const reqCheckCart = (skuId, isChecked) => requests.get(`cart/checkCart/${skuId}/${isChecked}`)
 export const reqUserCode = (params) => requests.get(`user/passport/sendCode/${params}`)
 export const reqRegisterUser = (data) => requests.post('user/passport/register', data)
+export const reqLoginUser = (data) => requests.post('user/passport/login', data)
+export const reqUserInfo = () => requests.get('user/passport/auth/getUserInfo')
+export const reqLogout = () => requests.get('user/passport/logout')

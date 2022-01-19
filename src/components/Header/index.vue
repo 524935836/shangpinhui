@@ -6,10 +6,14 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <p v-if="!name">
             <span>请</span>
             <router-link to="/login">登录</router-link>
             <router-link to="/register" class="register">免费注册</router-link>
+          </p>
+          <p v-else>
+            <a>{{ name }}</a>
+            <a class="register" @click="handleLogoutUser">退出登录</a>
           </p>
         </div>
         <div class="typeList">
@@ -49,6 +53,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'Header',
   data() {
@@ -65,7 +70,12 @@ export default {
   beforeDestroy() {
     this.$bus.$off('clear')
   },
+  computed: {
+    ...mapGetters('user', ['name'])
+  },
   methods: {
+    ...mapActions('user', ['logoutUser']),
+    // 跳转搜索组件
     goSearch() {
       const location = {
         name: 'search',
@@ -75,6 +85,12 @@ export default {
         location.query = this.$route.query
       }
       this.$router.push(location)
+    },
+    // 退出登录
+    async handleLogoutUser() {
+      const res = await this.logoutUser()
+      if (res.code !== 200) return alert(res.message)
+      this.$router.push('/home')
     }
   }
 }
@@ -94,6 +110,10 @@ export default {
 
       .loginList {
         float: left;
+
+        a {
+          cursor: pointer;
+        }
 
         p {
           float: left;

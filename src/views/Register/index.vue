@@ -13,7 +13,7 @@
       </div>
       <div class="content">
         <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码" :value="code" />
+        <input type="text" placeholder="请输入验证码" v-model="code" />
         <button style="width: 100px; height: 38px" @click="getCodeInfo">获取验证码</button>
         <span class="error-msg">错误提示信息</span>
       </div>
