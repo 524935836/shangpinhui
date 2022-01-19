@@ -50,8 +50,8 @@ export default {
     this.getBannerList()
     // 获取floor数据
     this.getFloorList()
-    // 获取用户信息
-    this.getUserInfo()
+    // // 获取用户信息
+    // this.getUserInfo()
   },
   methods: {
     ...mapActions('home', ['getBannerList', 'getFloorList']),

@@ -7,6 +7,7 @@ import Search from '@/views/Search'
 import Detail from '@/views/Detail'
 import AddCartSuccess from '@/views/AddCartSuccess'
 import ShopCart from '@/views/ShopCart'
+import store from '@/store'
 
 const originPush = VueRouter.prototype.push
 const originReplace = VueRouter.prototype.replace
@@ -45,6 +46,35 @@ const router = new VueRouter({
   routes,
   scrollBehavior(to, from, savedPosition) {
     return { y: 0 }
+  }
+})
+
+router.beforeEach(async (to, from, next) => {
+  const token = store.state.user.token
+  const userInfo = store.state.user.userInfo
+
+  // 是否登录
+  if (token) {
+    // 是否跳转登录组件
+    if (to.path === '/login') {
+      next('/home')
+    } else {
+      // 是否获取了用户信息
+      if (Object.keys(userInfo).length) {
+        next()
+      } else {
+        const res = await store.dispatch('user/getUserInfo')
+        // token是否过期
+        if (res.code !== 200) {
+          await store.dispatch('user/logoutUser')
+          next('/login')
+          return
+        }
+        next()
+      }
+    }
+  } else {
+    next()
   }
 })
 

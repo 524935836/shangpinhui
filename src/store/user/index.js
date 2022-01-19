@@ -45,10 +45,11 @@ const actions = {
   },
   // 获取用户信息(home组件)
   async getUserInfo({ commit }) {
-    const res = await reqUserInfo()
+    const res = await reqUserInfo().catch(err => err)
     if (res.code === 200) {
       commit('GETUSERINFO', res.data)
     }
+    return res
   },
   // 退出登录
   async logoutUser({ commit }) {

@@ -350,10 +350,10 @@ export default {
     Zoom
   },
   mounted() {
-    if (!Object.keys(this.goodsInfo).length) {
-      // 获取详情信息
-      this.getGoodsInfo(this.$route.params.skuId)
-    }
+    // if (!Object.keys(this.goodsInfo).length) {
+    // 获取详情信息
+    this.getGoodsInfo(this.$route.params.skuId)
+    // }
   },
   computed: {
     ...mapGetters('detail', ['categoryView', 'skuInfo', 'spuSaleAttrList']),
