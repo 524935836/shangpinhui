@@ -10,6 +10,9 @@ import ShopCart from '@/views/ShopCart'
 import Trade from '@/views/Trade'
 import Pay from '@/views/Pay'
 import PaySuccess from '@/views/PaySuccess'
+import Center from '@/views/Center'
+import MyOrder from '@/views/Center/MyOrder'
+import GroupOrder from '@/views/Center/GroupOrder'
 
 import store from '@/store'
 
@@ -46,7 +49,18 @@ const routes = [
   { name: 'shopCart', path: '/shopCart', component: ShopCart, meta: { show: true } },
   { name: 'trade', path: '/trade', component: Trade, meta: { show: true } },
   { name: 'pay', path: '/pay', component: Pay, meta: { show: true } },
-  { name: 'paysuccess', path: '/paysuccess', component: PaySuccess, meta: { show: true } }
+  { name: 'paysuccess', path: '/paysuccess', component: PaySuccess, meta: { show: true } },
+  {
+    name: 'center',
+    path: '/center',
+    component: Center,
+    meta: { show: true },
+    children: [
+      { path: '/center', redirect: '/center/myOrder' },
+      { name: 'myOrder', path: 'myOrder', component: MyOrder, meta: { show: true } },
+      { name: 'groupOrder', path: 'groupOrder', component: GroupOrder, meta: { show: true } }
+    ]
+  }
 ]
 
 const router = new VueRouter({
