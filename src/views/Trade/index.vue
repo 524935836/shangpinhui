@@ -110,7 +110,8 @@ export default {
   name: 'Trade',
   data() {
     return {
-      msg: ''
+      msg: '',
+      orderId: ''
     }
   },
   mounted() {
@@ -148,6 +149,8 @@ export default {
       }
       const res = await this.$API.reqsubmitOrder(this.orderInfo.tradeNo, data)
       if (res.code !== 200) return alert(res.message)
+      this.orderId = res.data
+      this.$router.push(`/pay?orderId=${this.orderId}`)
     }
   }
 }
@@ -423,6 +426,7 @@ export default {
       text-align: center;
       color: #fff;
       background-color: #e1251b;
+      cursor: pointer;
     }
   }
 }

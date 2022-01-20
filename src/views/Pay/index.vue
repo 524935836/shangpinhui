@@ -9,10 +9,11 @@
         <div class="paymark">
           <span class="fl"
             >请您在提交订单<em class="orange time">4小时</em
-            >之内完成支付，超时订单会自动取消。订单号：<em>145687</em></span
+            >之内完成支付，超时订单会自动取消。订单号：<em>{{ orderId }}</em></span
           >
           <span class="fr"
-            ><em class="lead">应付金额：</em><em class="orange money">￥17,654</em></span
+            ><em class="lead">应付金额：</em
+            ><em class="orange money">￥{{ payInfo.totalFee }}</em></span
           >
         </div>
       </div>
@@ -67,7 +68,7 @@
         <div class="hr"></div>
 
         <div class="submit">
-          <router-link class="btn" to="/paysuccess">立即支付</router-link>
+          <a class="btn" @click="open">立即支付</a>
         </div>
         <div class="otherpay">
           <div class="step-tit">
@@ -84,10 +85,72 @@
 </template>
 
 <script>
+import QRCode from 'qrcode'
+
 export default {
   name: 'Pay',
   data() {
-    return {}
+    return {
+      payInfo: {},
+      timer: null,
+      code: ''
+    }
+  },
+  mounted() {
+    this.getPayInfo()
+  },
+  computed: {
+    orderId() {
+      return this.$route.query.orderId
+    }
+  },
+  methods: {
+    // 获取订单支付信息
+    async getPayInfo() {
+      const res = await this.$API.reqPayInfo(this.orderId)
+      if (res.code !== 200) return alert(res.message)
+      this.payInfo = res.data
+    },
+    // 遮罩层
+    async open() {
+      // 生成二维码
+      const url = await QRCode.toDataURL(this.payInfo.codeUrl)
+      this.$alert(`<img src="${url}" />`, '请用微信支付', {
+        dangerouslyUseHTMLString: true,
+        showClose: false,
+        // distinguishCancelAndClose: true,
+        showCancelButton: true,
+        cancelButtonText: '支付遇见问题',
+        confirmButtonText: '已支付成功',
+        center: true,
+        // 关闭前的回调
+        beforeClose: (type, instance, done) => {
+          clearInterval(this.timer)
+          this.timer = null
+          done()
+          if (type === 'cancel') {
+            alert('请联系管理员')
+          } else {
+            // if (this.code === 200) {
+            this.$router.push('/paysuccess')
+            // }
+          }
+        }
+      })
+      if (!this.timer) {
+        // 3秒查询一次支付状态
+        this.timer = setInterval(async () => {
+          const res = await this.$API.reqPayState(this.orderId)
+          if (res.code !== 200) return alert(res.message)
+          // 清空定时器
+          clearInterval(this.timer)
+          this.timer = null
+          this.code = res.code
+          this.$msgbox.close()
+          this.$router.push('/paysuccess')
+        }, 3000)
+      }
+    }
   }
 }
 </script>
