@@ -1,20 +1,32 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/views/Home'
-import Login from '@/views/Login'
-import Register from '@/views/Register'
-import Search from '@/views/Search'
-import Detail from '@/views/Detail'
-import AddCartSuccess from '@/views/AddCartSuccess'
-import ShopCart from '@/views/ShopCart'
-import Trade from '@/views/Trade'
-import Pay from '@/views/Pay'
-import PaySuccess from '@/views/PaySuccess'
-import Center from '@/views/Center'
-import MyOrder from '@/views/Center/MyOrder'
-import GroupOrder from '@/views/Center/GroupOrder'
-
 import store from '@/store'
+// import Home from '@/views/Home'
+const Home = () => import('@/views/Home')
+// import Login from '@/views/Login'
+const Login = () => import('@/views/Login')
+// import Register from '@/views/Register'
+const Register = () => import('@/views/Register')
+// import Search from '@/views/Search'
+const Search = () => import('@/views/Search')
+// import Detail from '@/views/Detail'
+const Detail = () => import('@/views/Detail')
+// import AddCartSuccess from '@/views/AddCartSuccess'
+// import ShopCart from '@/views/ShopCart'
+const AddCartSuccess = () => import(/* webpackChunkName: "AddCartSuccess_ShopCart" */ '@/views/AddCartSuccess')
+const ShopCart = () => import(/* webpackChunkName: "AddCartSuccess_ShopCart" */ '@/views/ShopCart')
+// import Trade from '@/views/Trade'
+const Trade = () => import('@/views/Trade')
+// import Pay from '@/views/Pay'
+// import PaySuccess from '@/views/PaySuccess'
+const Pay = () => import(/* webpackChunkName: "Pay_PaySuccess" */ '@/views/Pay')
+const PaySuccess = () => import(/* webpackChunkName: "Pay_PaySuccess" */ '@/views/PaySuccess')
+// import Center from '@/views/Center'
+// import MyOrder from '@/views/Center/MyOrder'
+// import GroupOrder from '@/views/Center/GroupOrder'
+const Center = () => import(/* webpackChunkName: "Center_MyOrder_GroupOrder" */ '@/views/Center')
+const MyOrder = () => import(/* webpackChunkName: "Center_MyOrder_GroupOrder" */ '@/views/Center/MyOrder')
+const GroupOrder = () => import(/* webpackChunkName: "Center_MyOrder_GroupOrder" */ '@/views/Center/GroupOrder')
 
 const originPush = VueRouter.prototype.push
 const originReplace = VueRouter.prototype.replace
@@ -122,7 +134,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     // 未登录下指定路径跳转至home
     if (to.path.indexOf('trade') !== -1 || to.path.indexOf('pay') !== -1 || to.path.indexOf('center') !== -1) {
-      next(`/login?redirect=${to.path}`)
+      next(`/login?redirect=${from.path}`)
     } else {
       next()
     }
