@@ -204,6 +204,7 @@ export default {
     },
     // 获取trademark的回调(自定义事件)
     trademarkInfo(trademark) {
+      if (this.searchParams.trademark) return
       this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`
       this.getSearchInfo(this.searchParams)
     },

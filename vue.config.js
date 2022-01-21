@@ -1,4 +1,6 @@
 module.exports = {
+  // 不打包map文件
+  // productionSourceMap: false,
   devServer: {
     port: 8000,
     open: true,
