@@ -61,7 +61,7 @@
                 <div class="list-wrap">
                   <div class="p-img">
                     <a target="_blank"
-                      ><img :src="goods.defaultImg" :data-goods-id="goods.id"
+                      ><img v-lazy="goods.defaultImg" :data-goods-id="goods.id"
                     /></a>
                   </div>
                   <div class="price">
