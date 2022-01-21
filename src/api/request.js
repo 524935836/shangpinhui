@@ -1,5 +1,5 @@
 import axios from 'axios'
-import nprogress from 'nprogress'
+import Nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 import store from '@/store'
 
@@ -8,7 +8,7 @@ const requests = axios.create({
   timeout: 5000
 })
 requests.interceptors.request.use(function (config) {
-  nprogress.start()
+  Nprogress.start()
   // 判断详情页的仓库中是否有uuidToken
   if (store.state.detail.uuidToken) {
     config.headers.userTempId = store.state.detail.uuidToken
@@ -21,7 +21,7 @@ requests.interceptors.request.use(function (config) {
   return Promise.reject(error)
 })
 requests.interceptors.response.use(function (response) {
-  nprogress.done()
+  Nprogress.done()
   return response.data
 }, function (error) {
   return Promise.reject(error)
