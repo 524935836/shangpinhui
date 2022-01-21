@@ -15,6 +15,8 @@ import '@/mock/mockServe.js'
 import 'swiper/css/swiper.css'
 // 引入图片
 import load from './assets/load.gif'
+// 引入表单校验插件
+import '@/plugins/validate'
 
 Vue.component(TypeNav.name, TypeNav)
 Vue.component(Carousel.name, Carousel)
