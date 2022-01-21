@@ -83,7 +83,8 @@ export default {
       if (!phone && !password) return
       const res = await this.loginUser({ phone, password })
       if (res.code !== 200) return alert(res.message)
-      this.$router.push('/home')
+      const toPath = this.$route.query.redirect || '/home'
+      this.$router.push(toPath)
     }
   }
 }

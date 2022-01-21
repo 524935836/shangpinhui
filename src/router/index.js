@@ -47,8 +47,32 @@ const routes = [
   { name: 'detail', path: '/detail/:skuId', component: Detail, meta: { show: true } },
   { name: 'addCartSuccess', path: '/addCartSuccess', component: AddCartSuccess, meta: { show: true } },
   { name: 'shopCart', path: '/shopCart', component: ShopCart, meta: { show: true } },
-  { name: 'trade', path: '/trade', component: Trade, meta: { show: true } },
-  { name: 'pay', path: '/pay', component: Pay, meta: { show: true } },
+  {
+    name: 'trade',
+    path: '/trade',
+    component: Trade,
+    meta: { show: true },
+    beforeEnter: (to, from, next) => {
+      if (from.path === '/shopCart') {
+        next()
+      } else {
+        next(false)
+      }
+    }
+  },
+  {
+    name: 'pay',
+    path: '/pay',
+    component: Pay,
+    meta: { show: true },
+    beforeEnter: (to, from, next) => {
+      if (from.path === '/trade') {
+        next()
+      } else {
+        next(false)
+      }
+    }
+  },
   { name: 'paysuccess', path: '/paysuccess', component: PaySuccess, meta: { show: true } },
   {
     name: 'center',
@@ -96,7 +120,12 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
-    next()
+    // 未登录下指定路径跳转至home
+    if (to.path.indexOf('trade') !== -1 || to.path.indexOf('pay') !== -1 || to.path.indexOf('center') !== -1) {
+      next(`/login?redirect=${to.path}`)
+    } else {
+      next()
+    }
   }
 })
 
