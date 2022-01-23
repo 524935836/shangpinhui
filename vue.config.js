@@ -1,6 +1,8 @@
 module.exports = {
   // 不打包map文件
   // productionSourceMap: false,
+  // 关闭ESLINT校验工具
+  // lintOnSave: false,
   devServer: {
     port: 8000,
     open: true,
